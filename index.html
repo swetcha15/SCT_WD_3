@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A modern, vibrant, and responsive Tic-Tac-Toe web application featuring custom player names, colorful neon aesthetics, score tracking, and intelligent AI.">
+  <title>Tic-Tac-Toe — Classic Rules · New Energy</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a0e1a'/><path d='M25 25L75 75M75 25L25 75' stroke='%2300f0ff' stroke-width='14' stroke-linecap='round'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Grid and Glow Background -->
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="ambient-glow glow-cyan" aria-hidden="true"></div>
+  <div class="ambient-glow glow-pink" aria-hidden="true"></div>
+
+  <main class="app-container">
+    <!-- Header Section -->
+    <header class="app-header">
+      <div class="header-tag">
+        <span class="tag-sparkle">✦</span>
+        <span>CLASSIC RULES · NEW ENERGY</span>
+      </div>
+      <h1 class="main-title">
+        <span class="title-cyan">TIC</span><span class="title-hyphen">-</span><span class="title-cyan">TAC</span><span class="title-hyphen">-</span><span class="title-pink">TOE</span>
+      </h1>
+      <p class="matchup-subtitle" id="matchup-subtitle">
+        <span class="match-p1">PLAYER X</span>
+        <span class="match-vs">VS</span>
+        <span class="match-p2">PLAYER O</span>
+      </p>
+    </header>
+
+    <!-- Mode Selector -->
+    <div class="mode-section">
+      <span class="section-label">CHOOSE YOUR MODE</span>
+      <div class="mode-selector" role="radiogroup" aria-label="Game Mode Selection">
+        <button 
+          id="mode-pvp" 
+          class="mode-btn" 
+          role="radio" 
+          aria-checked="false" 
+          data-mode="pvp"
+          type="button"
+        >
+          <span class="mode-icon">👥</span>
+          <span>2 Players</span>
+        </button>
+        <button 
+          id="mode-pvc" 
+          class="mode-btn active" 
+          role="radio" 
+          aria-checked="true" 
+          data-mode="pvc"
+          type="button"
+        >
+          <span class="mode-icon">🤖</span>
+          <span>Vs Computer</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Scoreboard with Custom Player Names -->
+    <section class="scoreboard" aria-label="Match Scores and Player Names">
+      <!-- Player X Card -->
+      <div class="score-card card-cyan">
+        <div class="card-highlight-bar bar-cyan"></div>
+        <div class="name-input-wrapper">
+          <input 
+            type="text" 
+            id="player-x-name" 
+            class="player-name-input input-cyan" 
+            value="Player X" 
+            maxlength="14" 
+            placeholder="Player 1" 
+            aria-label="Enter Player 1 (X) Name"
+          >
+          <span class="edit-hint" title="Edit name">✎</span>
+        </div>
+        <div class="score-number score-cyan" id="score-x">0</div>
+        <div class="score-badge badge-cyan">WINS</div>
+      </div>
+
+      <!-- Draws Card -->
+      <div class="score-card card-amber">
+        <div class="card-highlight-bar bar-amber"></div>
+        <div class="draws-title">DRAWS</div>
+        <div class="score-number score-amber" id="score-draws">0</div>
+        <div class="score-badge badge-amber">TIED</div>
+      </div>
+
+      <!-- Player O / Computer Card -->
+      <div class="score-card card-pink">
+        <div class="card-highlight-bar bar-pink"></div>
+        <div class="name-input-wrapper">
+          <input 
+            type="text" 
+            id="player-o-name" 
+            class="player-name-input input-pink" 
+            value="Computer" 
+            maxlength="14" 
+            placeholder="Player 2" 
+            aria-label="Enter Player 2 (O) Name"
+          >
+          <span class="edit-hint" id="edit-hint-o" title="Edit name">✎</span>
+        </div>
+        <div class="score-number score-pink" id="score-o">0</div>
+        <div class="score-badge badge-pink">WINS</div>
+      </div>
+    </section>
+
+    <!-- Status Banner (Turn & Round State) -->
+    <div class="status-banner" id="status-banner" aria-live="polite">
+      <div class="status-indicator-icon" id="status-icon">
+        <div class="pulse-indicator pulse-cyan"></div>
+      </div>
+      <div class="status-text-group">
+        <div class="status-title" id="status-title">Your turn — Player X</div>
+        <div class="status-subtitle" id="status-subtitle">Place your mark on any available cell</div>
+      </div>
+    </div>
+
+    <!-- Main Game Area -->
+    <div class="game-main-area">
+      <!-- 3x3 Game Board -->
+      <div class="board-wrapper">
+        <div 
+          id="board" 
+          class="board" 
+          role="grid" 
+          aria-label="Tic-Tac-Toe 3 by 3 Grid"
+        >
+          <button class="cell" data-index="0" role="gridcell" aria-label="Row 1, Column 1, empty" tabindex="0"></button>
+          <button class="cell" data-index="1" role="gridcell" aria-label="Row 1, Column 2, empty" tabindex="0"></button>
+          <button class="cell" data-index="2" role="gridcell" aria-label="Row 1, Column 3, empty" tabindex="0"></button>
+          <button class="cell" data-index="3" role="gridcell" aria-label="Row 2, Column 1, empty" tabindex="0"></button>
+          <button class="cell" data-index="4" role="gridcell" aria-label="Row 2, Column 2, empty" tabindex="0"></button>
+          <button class="cell" data-index="5" role="gridcell" aria-label="Row 2, Column 3, empty" tabindex="0"></button>
+          <button class="cell" data-index="6" role="gridcell" aria-label="Row 3, Column 1, empty" tabindex="0"></button>
+          <button class="cell" data-index="7" role="gridcell" aria-label="Row 3, Column 2, empty" tabindex="0"></button>
+          <button class="cell" data-index="8" role="gridcell" aria-label="Row 3, Column 3, empty" tabindex="0"></button>
+        </div>
+      </div>
+
+      <!-- Round & Game Actions -->
+      <div class="controls-panel">
+        <button id="new-round-btn" class="btn btn-action" type="button">
+          <span class="btn-icon">↺</span>
+          <span>New Round</span>
+        </button>
+        <button id="reset-scores-btn" class="btn btn-outline" type="button">
+          <span class="btn-icon">⚡</span>
+          <span>Reset Scores</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Game Result Modal Overlay -->
+  <div id="result-overlay" class="result-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="result-title" aria-hidden="true">
+    <div class="result-card">
+      <div id="result-icon-container" class="result-icon-container" aria-hidden="true"></div>
+      <h2 id="result-title" class="result-title">Player X Wins!</h2>
+      <p id="result-description" class="result-description">Three in a row secured the victory.</p>
+      <div class="modal-actions">
+        <button id="play-again-btn" class="btn btn-action" type="button">
+          Play Next Round
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
